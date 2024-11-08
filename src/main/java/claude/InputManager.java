@@ -25,6 +25,8 @@ public class InputManager {
                 startMovingLeft();
                 character.sprite.setScaleX(-1);
                 break;
+            default:
+                break;
         }
     }
     
@@ -35,6 +37,8 @@ public class InputManager {
                 break;
             case D:
                 stopMovingLeft();
+                break;
+            default:
                 break;
         }
     }

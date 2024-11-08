@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import java.io.IOException;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 
 /**
  * JavaFX App
@@ -22,22 +23,33 @@ public class App extends Application {
     private int screenHeight = 720;
     private Pane root;
     private Character character;
-    private ImageView backgroundImageView;
+    private StackPane backgroundContainer;
+    private ImageView backgroundImageView1;
+    private ImageView backgroundImageView2;
     private String backgroundPath = "/claude/images/screen_background.jpg";
-    // private int floorLevel = 475;
     private int backgroundScrollSpeed = 10;
-
-    @Override
-    public void start(Stage stage) throws IOException {
-        this.root = new Pane();
-        scene = new Scene(this.root, screenWidth, screenHeight);
+    
+        @Override
+        public void start(Stage stage) throws IOException {
+            this.root = new Pane();
+            scene = new Scene(this.root, screenWidth, screenHeight);
+    
+            // Créer le container pour les images de fond
+            this.backgroundContainer = new StackPane();
+            this.root.getChildren().add(backgroundContainer);
 
         // Ajouter une image en fond
         Image backgroundImage = new Image(getClass().getResource(backgroundPath).toExternalForm());
-        backgroundImageView = new ImageView(backgroundImage);
-        backgroundImageView.setFitHeight(screenHeight);
-        backgroundImageView.setPreserveRatio(true);
-        root.getChildren().add(backgroundImageView);
+        backgroundImageView1 = new ImageView(backgroundImage);
+        backgroundImageView1.setFitHeight(screenHeight);
+        backgroundImageView1.setPreserveRatio(true);
+
+        this.backgroundImageView2 = new ImageView(backgroundImage);
+        this.backgroundImageView2.setFitHeight(screenHeight);
+        this.backgroundImageView2.setPreserveRatio(true);
+        this.backgroundImageView2.setTranslateX(screenWidth);
+
+        root.getChildren().addAll(backgroundImageView1, backgroundImageView2);
 
         // Init le personnage
         this.character = new Character();
@@ -68,11 +80,29 @@ public class App extends Application {
         scene.getRoot().requestFocus();
     }
 
+    
+
     private void updateAnimation() {
         if (inputManager.isMovingLeft()) {
-            backgroundImageView.setTranslateX(backgroundImageView.getTranslateX() - backgroundScrollSpeed);
+            backgroundImageView1.setTranslateX(backgroundImageView1.getTranslateX() - backgroundScrollSpeed);
+            backgroundImageView2.setTranslateX(backgroundImageView2.getTranslateX() - backgroundScrollSpeed);
+
+            if (backgroundImageView1.getTranslateX() <= -screenWidth) {
+                backgroundImageView1.setTranslateX(screenWidth);
+            }
+            if (backgroundImageView2.getTranslateX() <= -screenWidth) {
+                backgroundImageView2.setTranslateX(screenWidth);
+            }
         } else if (inputManager.isMovingRight()) {
-            backgroundImageView.setTranslateX(backgroundImageView.getTranslateX() + backgroundScrollSpeed);
+            backgroundImageView1.setTranslateX(backgroundImageView1.getTranslateX() + backgroundScrollSpeed);
+            backgroundImageView2.setTranslateX(backgroundImageView2.getTranslateX() + backgroundScrollSpeed);
+
+            if (backgroundImageView1.getTranslateX() >= screenWidth) {
+                backgroundImageView1.setTranslateX(-screenWidth);
+            }
+            if (backgroundImageView2.getTranslateX() >= screenWidth) {
+                backgroundImageView2.setTranslateX(-screenWidth);
+            }
         }
         character.update();
     }
