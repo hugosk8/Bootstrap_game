@@ -5,9 +5,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import java.io.IOException;
+
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 
 /**
@@ -26,13 +31,15 @@ public class App extends Application {
         scene = new Scene(this.root, 1280, 720);
 
         // Ajouter une image en fond
-        Image backgroundImage = new Image(getClass().getResource(backgroundPath).toExternalForm());    
-        ImageView backgroundImageView = new ImageView(backgroundImage);  
-        backgroundImageView.setFitWidth(scene.getWidth());  
-        backgroundImageView.setFitHeight(scene.getHeight());
-        backgroundImageView.setPreserveRatio(false);
-
-        root.getChildren().add(backgroundImageView);
+        Image backgroundImage = new Image(getClass().getResource(backgroundPath).toExternalForm());
+        BackgroundImage background = new BackgroundImage(
+            backgroundImage,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER,
+            new BackgroundSize(100, 100, true, true, false, true)
+        );
+        root.setBackground(new Background(background));
 
         // Init le personnage
         this.character = new Character();
@@ -52,6 +59,7 @@ public class App extends Application {
         });
 
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 
